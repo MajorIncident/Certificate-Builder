@@ -92,7 +92,8 @@ session_start();
 <body>
 
 	<div class="DZ-form">
-	<h1><b>KT CERTIFICATE BUILDER</b></h1></div>
+	<h1><b>KT CERTIFICATE BUILDER</b></h1>
+	<h4>by: Gijs Verrest and Shane Chagpar</h4></div>
 	<div class="DZ-form">
 		<h2>Optional: Client Logo</h2>
 		<h4><br>Upload logo (JPG, GIF or PNG in high resolution)</h4>
@@ -120,7 +121,7 @@ session_start();
 				</div>
 				
 		    	<div id="addLogo4" class="icon">
-				<h4>Or use from Library:</h4>
+				<h4>Or select client logo from Library:</h4>
 				<select class="arrow" name="existing-logo" id="existing-logo">
 				<option value=''></option>
 
@@ -141,18 +142,39 @@ session_start();
 			<legend>Certificate Details</legend>
 
 			<div class="icon">
-				<label class="cd-label" for="cd-textarea">Custom Session or Course Name</label>
-				<input class="message" type="text" name="session" id="session" required>
+			<h4>Select a class name</h4>
+				<select class="arrow" name="sessiondd" id="sessiondd">
+				<option value=''></option>
+				<option value="Problem Solving and Decision Making" selected >Problem Solving and Decision Making</option>;
+				<option value="Analytic Troubleshooting">Analytic Troubleshooting</option>;
+				<option value="Troubleshooting Foundations">Troubleshooting Foundations</option>;
+				<option value="Problem Management">Problem Management</option>;
+				<option value="Major Incident Management">Major Incident Management</option>;
+				<option value="Project Management">Project Management</option>;
+				<option value="Frontline">Frontline</option>;
+				<option value="Incident Mapping">Incident Mapping</option>;
+				<option value="Proactive Problem Management">Proactive Problem Management</option>;
+				</select>
+		    </div>
+			<h4>Optional: Enter a Custom Class Name (any text here will be added to any class name you may select above)</h4>
+			<div class="icon">
+				<label class="cd-label" for="cd-textarea">Custom Session/Class Name</label>
+				<input class="message" type="text" name="session" id="session">
 		    </div>
 		    <div class="icon">
-				<label class="cd-label" for="cd-textarea">Date(s)</label>
-				<input class="message" type="text" name="date" id="date" required>
+				<label class="cd-label" for="cd-textarea">Date</label>
+				<input class="message" type="date" name="date" id="date" value=<?php echo date('Y-m-d');?> required>
 		    </div>
 		    <div class="icon">
 				<label class="cd-label" for="cd-textarea">Location</label>
-				<input class="message" type="text" name="location" id="location" required>
+				<input class="message" type="text" name="location" id="location">
 		    </div>
 			
+			<div class="icon">
+				<label class="cd-label" for="cd-textarea">Bottom Left Text (For Education Credits or Other text you wish to add)</label>
+				<input class="message" type="text" name="bottomleft" id="bottomleft">
+		    </div>
+
 			<h4>Certificate Language</h4>
 		    
 		    <ul class="cd-form-list">
@@ -201,7 +223,7 @@ session_start();
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-5" value="serviceA">
+						<input type="radio" name="certtype" id="radio-6" value="serviceA">
 						<label for="radio-5">Service: 5 Years</label>
 					</li>
 

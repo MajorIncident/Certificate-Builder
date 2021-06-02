@@ -40,8 +40,10 @@ require_once('fpdi/fpdi.php');
 $name = htmlspecialchars_decode(rawurldecode($_GET['name']));
 $names = htmlspecialchars_decode(rawurldecode($_GET['names']));
 $session = htmlspecialchars_decode(rawurldecode($_GET['session']));
+$sessiondd = htmlspecialchars_decode(rawurldecode($_GET['sessiondd']));
 $location = htmlspecialchars_decode(rawurldecode($_GET['location']));
 $date = htmlspecialchars_decode(rawurldecode($_GET['date']));
+$bottomleft = htmlspecialchars_decode(rawurldecode($_GET['bottomleft']));
 $language = htmlspecialchars_decode(rawurldecode($_GET['language']));
 $download = htmlspecialchars_decode(rawurldecode($_GET['download']));
 $certtype = htmlspecialchars_decode(rawurldecode($_GET['certtype']));
@@ -393,6 +395,7 @@ if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
 
 // CHECK INPUT $SESSION
 // Check if empty
+$session = $sessiondd." ".$session;
 if (empty($session)) { echo "No session"; exit;}
 // Check if only letters
 if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '&','(', ')'), '', preg_replace('/[0-9]+/', '', $session)))) { echo "session = ".$session."<br>Session format incorrect"; exit;}
@@ -403,13 +406,16 @@ if ($wlenght<2) { echo "session must be 2-80 characters"; exit;}
 
 // CHECK INPUT $LOCATION
 // Check if empty
-if (empty($location)) { echo "No location"; exit;}
-// Check if only letters
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/",".", ",", '-', '&', '(', ')'), '', preg_replace('/[0-9]+/', '', $location)))) { echo "location = ".$location."<br>Location format incorrect"; exit;}
-// Check length
-$wlenght = strlen($location);
-if ($wlenght>80) { echo "location must be 2-80 characters"; exit;}
-if ($wlenght<2) { echo "location must be 2-80 characters"; exit;}
+if (empty($location)) { 
+  //Do nothing and do not throw error as not required - old code: // echo "No location"; exit;}
+}else  {
+    // Check if only letters
+  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/",".", ",", '-', '&', '(', ')'), '', preg_replace('/[0-9]+/', '', $location)))) { echo "location = ".$location."<br>Location format incorrect"; exit;}
+  // Check length
+  $wlenght = strlen($location);
+  if ($wlenght>80) { echo "location must be 2-80 characters"; exit;}
+  if ($wlenght<2) { echo "location must be 2-80 characters"; exit;}
+}
 
 // CHECK INPUT $DATE
 // Check if empty
@@ -437,11 +443,10 @@ $location = iconv('UTF-8', 'windows-1252', $location);
 $date = iconv('UTF-8', 'windows-1252', $date);
 
 
-if ($certtype = "service5") {
-  $pdf = new FPDI();
-
-} else {
-  // You can create an object of the FPDI class. 
+//echo $certtype;
+//exit;
+//if (substr($certtype,0,6) == "service"){
+// You can create an object of the FPDI class. 
   // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
   // so you need not create a new TCPDF or FPDF object.
   // L = landscape, P = Portrait
@@ -476,28 +481,39 @@ if ($certtype = "service5") {
 
   // ADD NAME
   $pdf->SetFont('Times','B',36);
-  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen"
   $text = $name;
   $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
 
   // ADD SESSION
   $pdf->SetFont('Times','',24);
-  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen"
   $text = $session;
   $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
 
   // ADD LOCATION
   $pdf->SetFont('Times','',12);
-  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen"
   $text = $location;
   $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
 
   // ADD DATE
   $pdf->SetFont('Times','',12);
-  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen"
   $text = $date;
   $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
-}
+
+  // ADD Bottom Left
+  $pdf->SetFont('Times','',9);
+  $mid_x = 50; // the Left of the "PDF screen"
+  $text = $bottomleft;
+  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 195, $text);
+
+
+  //} else{
+//  echo $certtype;
+//  exit;
+//}
 
 
 
