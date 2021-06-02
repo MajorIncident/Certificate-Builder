@@ -443,8 +443,10 @@ $location = iconv('UTF-8', 'windows-1252', $location);
 $date = iconv('UTF-8', 'windows-1252', $date);
 
 
-//echo $certtype;
-//exit;
+//if (str_contains($certtype, "service")) { echo "hello";exit; }
+
+//} else { //Normal Certificates
+
 //if (substr($certtype,0,6) == "service"){
 // You can create an object of the FPDI class. 
   // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
@@ -508,13 +510,7 @@ $date = iconv('UTF-8', 'windows-1252', $date);
   $mid_x = 50; // the Left of the "PDF screen"
   $text = $bottomleft;
   $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 195, $text);
-
-
-  //} else{
-//  echo $certtype;
-//  exit;
 //}
-
 
 
 // Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
