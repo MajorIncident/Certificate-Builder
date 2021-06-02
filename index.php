@@ -141,7 +141,7 @@ session_start();
 			<legend>Certificate Details</legend>
 
 			<div class="icon">
-				<label class="cd-label" for="cd-textarea">Session/Course Name</label>
+				<label class="cd-label" for="cd-textarea">Custom Session or Course Name</label>
 				<input class="message" type="text" name="session" id="session" required>
 		    </div>
 		    <div class="icon">
@@ -157,22 +157,22 @@ session_start();
 		    
 		    <ul class="cd-form-list">
 					<li>
-						<input type="radio" name="language" id="radio-1" value="en" checked>
+						<input type="radio" name="language" id="radio-1" value="EN" checked>
 						<label for="radio-1">English</label>
 					</li>
 						
 					<li>
-						<input type="radio" name="language" id="radio-2" value="de">
+						<input type="radio" name="language" id="radio-2" value="DE">
 						<label for="radio-2">German</label>
 					</li>
 
 					<li>
-						<input type="radio" name="language" id="radio-3" value="nl">
+						<input type="radio" name="language" id="radio-3" value="NL">
 						<label for="radio-2">Dutch</label>
 					</li>
 
 					<li>
-						<input type="radio" name="language" id="radio-4" value="fr">
+						<input type="radio" name="language" id="radio-4" value="FR">
 						<label for="radio-2">French</label>
 					</li>
 
@@ -181,38 +181,48 @@ session_start();
 		    
 		    <ul class="cd-form-list">
 					<li>
-						<input type="radio" name="certtype" id="radio-1" value="ST" checked>
-						<label for="radio-1">Standard</label>
+						<input type="radio" name="certtype" id="radio-1" value="completion" checked>
+						<label for="radio-1">Completion</label>
 					</li>
 						
 					<li>
-						<input type="radio" name="certtype" id="radio-2" value="PL">
+						<input type="radio" name="certtype" id="radio-2" value="programleader">
 						<label for="radio-2">Program Leader</label>
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-3" value="SA">
-						<label for="radio-3">Service: 5 Years</label>
+						<input type="radio" name="certtype" id="radio-3" value="processcoach">
+						<label for="radio-3">Process Coach</label>
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-4" value="SB">
-						<label for="radio-4">Service: 10 Years</label>
+						<input type="radio" name="certtype" id="radio-4" value="processfacilitator">
+						<label for="radio-4">Process Facilitator</label>
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-5" value="SC">
-						<label for="radio-5">Service: 15 Years</label>
+						<input type="radio" name="certtype" id="radio-5" value="serviceA">
+						<label for="radio-5">Service: 5 Years</label>
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-6" value="SD">
-						<label for="radio-6">Service: 20 Years</label>
+						<input type="radio" name="certtype" id="radio-6" value="serviceB">
+						<label for="radio-6">Service: 10 Years</label>
 					</li>
 
 					<li>
-						<input type="radio" name="certtype" id="radio-7" value="SE">
-						<label for="radio-7">Service: 25 Years</label>
+						<input type="radio" name="certtype" id="radio-7" value="serviceC">
+						<label for="radio-7">Service: 15 Years</label>
+					</li>
+
+					<li>
+						<input type="radio" name="certtype" id="radio-8" value="serviceD">
+						<label for="radio-8">Service: 20 Years</label>
+					</li>
+
+					<li>
+						<input type="radio" name="certtype" id="radio-9" value="serviceE">
+						<label for="radio-9">Service: 25 Years</label>
 					</li>
 					
 
@@ -327,6 +337,6 @@ init: function() {
 };
     </script>
 <p></p>
-<p style="color:#ccc;font-size: 50%;">Copyright (c) 2013-2018 Gijs Verrest - forked and updated May 2021 by Shane Chagpar - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.</p>
+<p style="color:#ccc;font-size: 70%;">Copyright (c) 2013-2018 Gijs Verrest - forked and updated May 2021 by Shane Chagpar - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.</p>
 </body>
 </html>

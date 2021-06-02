@@ -378,8 +378,8 @@ if (empty($names)) {
 
 // CHECK INPUT DOWNLOAD / LANGUAGE / CERTIFICATE TYPE
 if (empty($download) || !ctype_alpha($download)) { echo "No/incorrect inline / download option given"; exit;} 
-if (empty($language) || !ctype_alpha($language)) { echo "No/incorrect language option given"; exit;} 
-if (empty($certtype) || !ctype_alpha($certtype)) { echo "No/incorrect certificate type given"; exit;} 
+if (empty($language) || !ctype_alpha($language)) { echo "No language option given"; exit;} 
+if (empty($certtype) || !ctype_alpha($certtype)) { echo "No certificate type given"; exit;} 
 
 // CHECK INPUT $NAME
 // Check if empty
@@ -437,22 +437,33 @@ $location = iconv('UTF-8', 'windows-1252', $location);
 $date = iconv('UTF-8', 'windows-1252', $date);
 
 
-// if ($certtype = "SD" || $certtype = "PL") {
+if ($certtype = "service5") {
+  $pdf = new FPDI();
+
+} else {
   // You can create an object of the FPDI class. 
   // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
   // so you need not create a new TCPDF or FPDF object.
   // L = landscape, P = Portrait
-  $pdf = new FPDI('L','mm','A4');
-
+  //test commented out shane $pdf = new FPDI('L','mm','A4');
+  $pdf = new FPDI();
   // Specify the source PDF document by calling setSourceFile function.
-  $pdf->setSourceFile("ktcert_blank_".$certtype.$language.".pdf");
+  $pdf->setSourceFile($certtype."_".$language.".pdf");
 
   // Specify which page of the document is to be imported. 
   // I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
   // http://www.prepressure.com/pdf/basics/page-boxes
   $tplIdx = $pdf->importPage(1, '/MediaBox');
+  
+  //new line from shane for size setting
+  $size = $pdf->getTemplateSize($tplIdx);
+
   $pdf->addPage();
-  $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
+  
+  // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
+  // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
+  //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
+  $pdf->useTemplate($tplIdx, null, null, null, null, true);
 
   // Now the document and the page to be used as template is successfully loaded. 
   // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
@@ -465,32 +476,28 @@ $date = iconv('UTF-8', 'windows-1252', $date);
 
   // ADD NAME
   $pdf->SetFont('Times','B',36);
-  $mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
   $text = $name;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 66, $text);
+  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
 
   // ADD SESSION
   $pdf->SetFont('Times','',24);
-  $mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
   $text = $session;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 116, $text);
+  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
 
   // ADD LOCATION
-  $pdf->SetFont('Times','',9);
-  $mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
+  $pdf->SetFont('Times','',12);
+  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
   $text = $location;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 139, $text);
+  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
 
   // ADD DATE
   $pdf->SetFont('Times','',12);
-  $mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
+  $mid_x = 141.5; // the middle of the "PDF screen", fixed by now.
   $text = $date;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 146, $text);
-//} else {
-  
-//  echo "here I am in the code"
-
-//}
+  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
+}
 
 
 
@@ -552,8 +559,8 @@ else
 $download = "F";
 
 // CHECK INPUT LANGUAGE / CERTIFICATE TYPE
-if (empty($language) || !ctype_alpha($language)) { echo "No/incorrect language option given"; exit;} 
-if (empty($certtype) || !ctype_alpha($certtype)) { echo "No/incorrect certifcate type given"; exit;} 
+if (empty($language) || !ctype_alpha($language)) { echo "No language option given"; exit;} 
+if (empty($certtype) || !ctype_alpha($certtype)) { echo "No certifcate type given"; exit;} 
 
 // CHECK INPUT $NAMES
 // Check if empty
@@ -641,7 +648,7 @@ $name = $value;
 $pdf = new FPDI('L','mm','A4');
 
 // Specify the source PDF document by calling setSourceFile function.
-$pdf->setSourceFile("ktcert_blank_".$certtype.$language.".pdf");
+$pdf->setSourceFile($certtype."_".$language.".pdf");
 
 // Specify which page of the document is to be imported. 
 // I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
@@ -691,7 +698,7 @@ $owner_pass = $files[$key];
 $origFile = __DIR__.'/cache/'.$files[$key];
 $destFile = __DIR__.'/cache/'.$files[$key];
 
-pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
+//pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
 
 
 } //// END LOOP GENERATE PDFs ////
