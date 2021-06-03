@@ -370,28 +370,12 @@ if (file_exists($folderName)) {
 ////// END CLEAR OLD CACHE //////
 
 
-
-// SINGLE OR MULTIPLE PDFs?
-if (empty($names)) { 
-
-
-////// SINGLE //////
-
+/////  COMMON TO BOTH SINGLE OR MULTIPLE PDFS
 
 // CHECK INPUT DOWNLOAD / LANGUAGE / CERTIFICATE TYPE
 if (empty($download) || !ctype_alpha($download)) { echo "No/incorrect inline / download option given"; exit;} 
 if (empty($language) || !ctype_alpha($language)) { echo "No language option given"; exit;} 
 if (empty($certtype) || !ctype_alpha($certtype)) { echo "No certificate type given"; exit;} 
-
-// CHECK INPUT $NAME
-// Check if empty
-if (empty($name)) { echo "No name"; exit;}
-// Check if only letters
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $name))) { echo "name = ".$name."<br>Name only letters"; exit;}
-// Check length
-$wlenght = strlen($name);
-if ($wlenght>80) { echo "name must be 2-80 characters"; exit;}
-if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
 
 // CHECK INPUT $SESSION
 // Check if empty
@@ -423,32 +407,48 @@ if (empty($date)) { echo "No date"; exit;}
 // Check if only letters
 $date_clean = str_replace(array(' ', "\'", "/", ".", ",", '-', '(', ')'), '', $date);
 if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/", ".", ",", '-', '&', '(', ')'), '', $date))) 
-		{ 
-		if (!ctype_alnum($date_clean))
-		{echo "date = ".$date."<br>Date format incorrect"; exit;}
-		}
+    { 
+    if (!ctype_alnum($date_clean))
+    {echo "date = ".$date."<br>Date format incorrect"; exit;}
+    }
 // Check length
 $wlenght = strlen($date);
 if ($wlenght>80) { echo "date must be 2-80 characters"; exit;}
 if ($wlenght<2) { echo "date must be 2-80 characters"; exit;}
 
-// define output filename
-$outputfilename = formatURL($name).'_KT_'.formatURL($session).'.pdf';
-
 // make special characters work
 $name = str_replace("\\", "", $name);
 $name = iconv('UTF-8', 'windows-1252', $name);
+//Can this be put in the common area? $names = str_replace("\\", "", $names);
+//Can this be put in the common areas? $names = iconv('UTF-8', 'windows-1252', $names);
 $session = iconv('UTF-8', 'windows-1252', $session);
 $location = iconv('UTF-8', 'windows-1252', $location);
 $date = iconv('UTF-8', 'windows-1252', $date);
 
 
-//if (str_contains($certtype, "service")) { echo "hello";exit; }
+// SINGLE OR MULTIPLE PDFs?
+if (empty($names)) { 
 
-//} else { //Normal Certificates
 
-//if (substr($certtype,0,6) == "service"){
-// You can create an object of the FPDI class. 
+  ////// SINGLE //////
+
+  // CHECK INPUT $NAME
+  // Check if empty
+  if (empty($name)) { echo "No name"; exit;}
+  // Check if only letters
+  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $name))) { echo "name = ".$name."<br>Name only letters"; exit;}
+  // Check length
+  $wlenght = strlen($name);
+  if ($wlenght>80) { echo "name must be 2-80 characters"; exit;}
+  if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
+
+  
+  // define output filename
+  $outputfilename = formatURL($name).'_KT_'.formatURL($session).'.pdf';
+
+//// CREATE A SINGLE PDF
+
+  // You can create an object of the FPDI class. 
   // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
   // so you need not create a new TCPDF or FPDF object.
   // L = landscape, P = Portrait
@@ -461,308 +461,352 @@ $date = iconv('UTF-8', 'windows-1252', $date);
   // I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
   // http://www.prepressure.com/pdf/basics/page-boxes
   $tplIdx = $pdf->importPage(1, '/MediaBox');
-  
-  //new line from shane for size setting
+
+  //new lines from shane for size setting from https://www.reddit.com/r/PHPhelp/comments/jf36m/question_how_can_i_get_the_height_and_width_of_an/
   $size = $pdf->getTemplateSize($tplIdx);
-
-  $pdf->addPage();
+  $w = $size[w];
+  $h = $size[h];
   
-  // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
-  // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
-  //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
-  $pdf->useTemplate($tplIdx, null, null, null, null, true);
+  // Detect Portrait or Landscape?
+  if ($h > $w) { //PDF is Portrait (Service Certificates)
+    
+    echo "Service Certificates are still being worked on at this time at this time - shane 06/03/2021";
+    exit;
 
-  // Now the document and the page to be used as template is successfully loaded. 
-  // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
-  $pdf->SetFont('Times','',12);
-  $pdf->SetTextColor(0, 0, 0);
-  $pdf->SetXY(148, 145);
+    //Re-Initialize in Portrait
+    
+    $pdf->addPage('P');
+    $pdf->useTemplate($tplIdx, 0, 0, $w, $h);
+    
+    // Now the document and the page to be used as template is successfully loaded. 
+    // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
+    $pdf->SetFont('Times','',12);
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetXY(148, 145);
 
-  // To write text, call the write() function. The first parameter takes line height value.
-  // $pdf->Write(0, 'Date', 'C');
+    // Set Mid Point of PDF Screen
+    $mid_x = $w/2;
 
-  // ADD NAME
-  $pdf->SetFont('Times','B',36);
-  $mid_x = 141.5; // the middle of the "PDF screen"
-  $text = $name;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
+    // ADD NAME
+    $pdf->SetFont('Times','B',36);
+    $text = $name;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
 
-  // ADD SESSION
-  $pdf->SetFont('Times','',24);
-  $mid_x = 141.5; // the middle of the "PDF screen"
-  $text = $session;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
-
-  // ADD LOCATION
-  $pdf->SetFont('Times','',12);
-  $mid_x = 141.5; // the middle of the "PDF screen"
-  $text = $location;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
-
-  // ADD DATE
-  $pdf->SetFont('Times','',12);
-  $mid_x = 141.5; // the middle of the "PDF screen"
-  $text = $date;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
-
-  // ADD Bottom Left
-  $pdf->SetFont('Times','',9);
-  $mid_x = 50; // the Left of the "PDF screen"
-  $text = $bottomleft;
-  $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 195, $text);
-//}
+    // ADD DATE
+    $pdf->SetFont('Times','',12);
+    $text = $date;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
 
 
-// Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
-//$pdf->Output($outputfilename,$download);
-$pdf->Output('cache/'.$outputfilename,"F"); 
+  } else { // PDF Certificate is Landscape (Standard Certificates) 
+  
+    $pdf->addPage();
 
-$user_pass = '';
-$owner_pass = $outputfilename;
-$origFile = __DIR__.'/cache/'.$outputfilename;
-$destFile = __DIR__.'/cache/'.$outputfilename;
+    // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
+    // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
+    //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
+    $pdf->useTemplate($tplIdx, null, null, null, null, true);
 
-pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
+    // Now the document and the page to be used as template is successfully loaded. 
+    // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
+    $pdf->SetFont('Times','',12);
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->SetXY(148, 145);
 
-//// OUTPUT PDF TO DISPLAY/DOWNLOAD
+    // To write text, call the write() function. The first parameter takes line height value.
+    // $pdf->Write(0, 'Date', 'C');
 
-$filepath = $_SERVER['SCRIPT_FILENAME'];
-$filepath = rtrim($filepath,"ktc.php")."cache/";
+    // Set Mid Point of PDF Screen
+    $mid_x = $w/2;
 
-if($download=="D"){
+    // Set Bottom Left Text Locations
+    if ($language == "EN") {
+      //$mid_x = 141.7; // Middle of PDF for 8.5x11 documents - not required as using math now
+      $mid_xBL = 50; // bottom left text for 8.5x11 document
+      $h_xBL = 195; // bottom left height for 8.5x11 document
+    }
+    else
+    {
+      //$mid_x = 148.3; // Middle of PDF for A4 documents - not required as using math now
+      $mid_xBL = 57; // bottom left text for A4 documents
+      $h_xBL = 185; // bottom left height for 8.5x11 document
+    }
 
-// http headers for pdf downloads
-header("Pragma: public");
-header("Expires: 0");
-header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-header("Cache-Control: public");
-header("Content-Description: File Transfer");
-header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=\"".$outputfilename."\"");
-header("Content-Transfer-Encoding: binary");
-header("Content-Length: ".filesize($filepath.$outputfilename));
-ob_end_flush();
-@readfile($filepath.$outputfilename);
+    // ADD NAME
+    $pdf->SetFont('Times','B',36);
+    $text = $name;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
 
-} else if($download=="I"){
+    // ADD SESSION
+    $pdf->SetFont('Times','',24);
+    $text = $session;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
 
-$file = $filepath.$outputfilename;
-$filename = $outputfilename;
-header('Content-type: application/pdf');
-header('Content-Disposition: inline; filename="' . $filename . '"');
-header('Content-Transfer-Encoding: binary');
-header('Accept-Ranges: bytes');
-@readfile($file);
+    // ADD LOCATION
+    $pdf->SetFont('Times','',12);
+    $text = $location;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
 
-}
+    // ADD DATE
+    $pdf->SetFont('Times','',12);
+    $text = $date;
+    $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
+
+    // ADD Bottom Left
+    $pdf->SetFont('Times','',9);
+    $text = $bottomleft;
+    $pdf->Text($mid_xBL - ($pdf->GetStringWidth($text) / 2), $h_xBL, $text);
+
+  }
+  
+
+  // Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
+  //$pdf->Output($outputfilename,$download);
+  $pdf->Output('cache/'.$outputfilename,"F"); 
+
+  $user_pass = '';
+  $owner_pass = $outputfilename;
+  $origFile = __DIR__.'/cache/'.$outputfilename;
+  $destFile = __DIR__.'/cache/'.$outputfilename;
+
+  pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
+
+  ///END CREATE A SINGLE PDF 
+
+
+  //// OUTPUT PDF TO DISPLAY/DOWNLOAD
+
+  $filepath = $_SERVER['SCRIPT_FILENAME'];
+  $filepath = rtrim($filepath,"ktc.php")."cache/";
+
+  if($download=="D"){
+
+  // http headers for pdf downloads
+  header("Pragma: public");
+  header("Expires: 0");
+  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+  header("Cache-Control: public");
+  header("Content-Description: File Transfer");
+  header("Content-type: application/octet-stream");
+  header("Content-Disposition: attachment; filename=\"".$outputfilename."\"");
+  header("Content-Transfer-Encoding: binary");
+  header("Content-Length: ".filesize($filepath.$outputfilename));
+  ob_end_flush();
+  @readfile($filepath.$outputfilename);
+
+  } else if($download=="I"){
+
+  $file = $filepath.$outputfilename;
+  $filename = $outputfilename;
+  header('Content-type: application/pdf');
+  header('Content-Disposition: inline; filename="' . $filename . '"');
+  header('Content-Transfer-Encoding: binary');
+  header('Accept-Ranges: bytes');
+  @readfile($file);
+
+  }
 } ////// END SINGLE //////
-
-
 else
-
-
 {
 
 
-////// MULTIPLE //////
+  ////// MULTIPLE //////
 
 
-// SET $DOWNLOAD
-$download = "F";
+  // SET $DOWNLOAD
+  $download = "F";
 
-// CHECK INPUT LANGUAGE / CERTIFICATE TYPE
-if (empty($language) || !ctype_alpha($language)) { echo "No language option given"; exit;} 
-if (empty($certtype) || !ctype_alpha($certtype)) { echo "No certifcate type given"; exit;} 
-
-// CHECK INPUT $NAMES
-// Check if empty
-if (empty($names)) { echo "No name"; exit;}
-// Check if only letters
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $names))) { echo "names = ".$names."<br>Names only letters"; exit;}
-// Check length
-$wlenght = strlen($names);
-if ($wlenght>8000) { echo "names must be 2-8000 characters"; exit;}
-if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
-
-// CHECK INPUT $SESSION
-// Check if empty
-if (empty($session)) { echo "No session"; exit;}
-// Check if only letters
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '&', '(', ')'), '', preg_replace('/[0-9]+/', '', $session)))) { echo "session = ".$session."<br>Session format incorrect"; exit;}
-// Check length
-$wlenght = strlen($session);
-if ($wlenght>80) { echo "session must be 2-80 characters"; exit;}
-if ($wlenght<2) { echo "session must be 2-80 characters"; exit;}
-
-// CHECK INPUT $LOCATION
-// Check if empty
-if (empty($location)) { echo "No location"; exit;}
-// Check if only letters
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/",".", ",", '-', '&', '(', ')'), '', preg_replace('/[0-9]+/', '', $location)))) { echo "location = ".$location."<br>Location format incorrect"; exit;}
-// Check length
-$wlenght = strlen($location);
-if ($wlenght>80) { echo "location must be 2-80 characters"; exit;}
-if ($wlenght<2) { echo "location must be 2-80 characters"; exit;}
-
-// CHECK INPUT $DATE
-// Check if empty
-if (empty($date)) { echo "No date"; exit;}
-// Check if only letters
-$date_clean = str_replace(array(' ', "\'", "/", ".", ",", '-', '(', ')'), '', $date);
-if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/", ".", ",", '-', '&', '(', ')'), '', $date))) 
-		{ 
-		if (!ctype_alnum($date_clean))
-		{echo "date = ".$date."<br>Date format incorrect"; exit;}
-		}
-// Check length
-$wlenght = strlen($date);
-if ($wlenght>80) { echo "date must be 2-80 characters"; exit;}
-if ($wlenght<2) { echo "date must be 2-80 characters"; exit;}
-
-// define output filename
-$outputfilenames = $names;
-$outputfilenames = preg_replace('/\s*,\s*/', ',', $outputfilenames); // remove spaces around commas
-$outputfilenames = preg_replace('/,+/', ',', $outputfilenames); // remove multiple commas
-$outputfilenamesArray = explode(',', $outputfilenames);
-
-foreach ($outputfilenamesArray as &$value) {
-
-// BUILD ARRAY OF FILENAMES FOR FUTURE ZIP-file
-$pdf_filename = formatURL($value).'_KT_'.formatURL($session).'.pdf';
-$files[] = $pdf_filename;
-
-}
-unset($value);
-
-// make special characters work
-$name = str_replace("\\", "", $name);
-$name = iconv('UTF-8', 'windows-1252', $name);
-$names = str_replace("\\", "", $names);
-$names = iconv('UTF-8', 'windows-1252', $names);
-$session = iconv('UTF-8', 'windows-1252', $session);
-$location = iconv('UTF-8', 'windows-1252', $location);
-$date = iconv('UTF-8', 'windows-1252', $date);
-
-//// LOOP TO GENERATE PDFs ////
-
-$names = preg_replace('/\s*,\s*/', ',', $names); // remove spaces around commas
-$names = preg_replace('/,+/', ',', $names); // remove multiple commas
-$nameArray = explode(',', $names);
-
-foreach ($nameArray as $key => $value) {
-
-$name = $value;
-
-// You can create an object of the FPDI class. 
-// The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
-// so you need not create a new TCPDF or FPDF object.
-// L = landscape, P = Portrait
-$pdf = new FPDI('L','mm','A4');
-
-// Specify the source PDF document by calling setSourceFile function.
-$pdf->setSourceFile($certtype."_".$language.".pdf");
-
-// Specify which page of the document is to be imported. 
-// I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
-// http://www.prepressure.com/pdf/basics/page-boxes
-$tplIdx = $pdf->importPage(1, '/MediaBox');
-$pdf->addPage();
-$pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
-
-// Now the document and the page to be used as template is successfully loaded. 
-// Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
-$pdf->SetFont('Times','',12);
-$pdf->SetTextColor(0, 0, 0);
-$pdf->SetXY(148, 145);
-
-// To write text, call the write() function. The first parameter takes line height value.
-// $pdf->Write(0, 'Date', 'C');
-
-// ADD NAME
-$pdf->SetFont('Times','B',36);
-$mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
-$text = $name;
-$pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 66, $text);
-
-// ADD SESSION
-$pdf->SetFont('Times','',24);
-$mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
-$text = $session;
-$pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 116, $text);
-
-// ADD LOCATION
-$pdf->SetFont('Times','',9);
-$mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
-$text = $location;
-$pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 139, $text);
-
-// ADD DATE
-$pdf->SetFont('Times','',12);
-$mid_x = 148.5; // the middle of the "PDF screen", fixed by now.
-$text = $date;
-$pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 146, $text);
-
-// Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
-$pdf->Output('cache/'.$files[$key],$download); 
-
-$user_pass = '';
-$owner_pass = $files[$key];
-$origFile = __DIR__.'/cache/'.$files[$key];
-$destFile = __DIR__.'/cache/'.$files[$key];
-
-//pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
+  // CHECK INPUT $NAMES
+  // Check if empty
+  if (empty($names)) { echo "No name"; exit;}
+  // Check if only letters
+  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $names))) { echo "names = ".$names."<br>Names only letters"; exit;}
+  // Check length
+  $wlenght = strlen($names);
+  if ($wlenght>8000) { echo "names must be 2-8000 characters"; exit;}
+  if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
 
 
-} //// END LOOP GENERATE PDFs ////
+  // define output filename
+  $outputfilenames = $names;
+  $outputfilenames = preg_replace('/\s*,\s*/', ',', $outputfilenames); // remove spaces around commas
+  $outputfilenames = preg_replace('/,+/', ',', $outputfilenames); // remove multiple commas
+  $outputfilenamesArray = explode(',', $outputfilenames);
 
-unset($value);
+  foreach ($outputfilenamesArray as &$value) {
 
-//// GENERATE ZIP FILE
+  // BUILD ARRAY OF FILENAMES FOR FUTURE ZIP-file
+  $pdf_filename = formatURL($value).'_KT_'.formatURL($session).'.pdf';
+  $files[] = $pdf_filename;
 
-# create new zip opbject
-$zip = new ZipArchive();
+  }
+  unset($value);
 
-# create a temp file & open it
-$tmp_file = tempnam('cache/', 'zipfile');
-$zip->open($tmp_file, ZipArchive::CREATE);
+  // make special characters work
+  $names = str_replace("\\", "", $names);
+  $names = iconv('UTF-8', 'windows-1252', $names);
+  
+  //// LOOP TO GENERATE PDFs ////
 
-# loop through each file
-foreach($files as $file){
+  $names = preg_replace('/\s*,\s*/', ',', $names); // remove spaces around commas
+  $names = preg_replace('/,+/', ',', $names); // remove multiple commas
+  $nameArray = explode(',', $names);
 
-    # download file
-    $download_file = file_get_contents('cache/'.$file);
+  foreach ($nameArray as $key => $value) {
 
-    #add it to the zip
-    $zip->addFromString(basename($file),$download_file);
+    $name = $value;
 
-}
+            //// CREATE A SINGLE PDF
 
-# close zip
-$zip->close();
-$zip_download_name = "cache/KT_certificates_".formatURL($session)."_".formatURL($date)."_".formatURL($location).".zip";
-rename($tmp_file, $zip_download_name);
-$zip_download_name = "KT_certificates_".formatURL($session)."_".formatURL($date)."_".formatURL($location).".zip";
-
-//// OUTPUT ZIP TO DOWNLOAD
-
-$filepath = $_SERVER['SCRIPT_FILENAME'];
-$filepath = rtrim($filepath,"ktc.php")."cache/";
-
-// http headers for zip downloads
-header("Pragma: public");
-header("Expires: 0");
-header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-header("Cache-Control: public");
-header("Content-Description: File Transfer");
-header("Content-type: application/octet-stream");
-header("Content-Disposition: attachment; filename=\"".$zip_download_name."\"");
-header("Content-Transfer-Encoding: binary");
-header("Content-Length: ".filesize($filepath.$zip_download_name));
-ob_end_flush();
-@readfile($filepath.$zip_download_name);
+          //if (strpos($certtype, "service") !== false) { 
+          //  echo "service found!";
+          //  exit;
+          //} else {
+          //  echo "no service found";
+          //  exit;
+          //}
 
 
-//// END GENERATE ZIP FILE
+          // You can create an object of the FPDI class. 
+          // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
+          // so you need not create a new TCPDF or FPDF object.
+          // L = landscape, P = Portrait
+          //test commented out shane $pdf = new FPDI('L','mm','A4');
+          $pdf = new FPDI();
+          // Specify the source PDF document by calling setSourceFile function.
+          $pdf->setSourceFile($certtype."_".$language.".pdf");
+
+          // Specify which page of the document is to be imported. 
+          // I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
+          // http://www.prepressure.com/pdf/basics/page-boxes
+          $tplIdx = $pdf->importPage(1, '/MediaBox');
+
+          //new line from shane for size setting
+          $size = $pdf->getTemplateSize($tplIdx);
+          $w = $size[w];
+          $h = $size[h];
+          
+          $pdf->addPage();
+
+          // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
+          // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
+          //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
+          $pdf->useTemplate($tplIdx, null, null, null, null, true);
+
+          // Now the document and the page to be used as template is successfully loaded. 
+          // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
+          $pdf->SetFont('Times','',12);
+          $pdf->SetTextColor(0, 0, 0);
+          $pdf->SetXY(148, 145);
+
+          // To write text, call the write() function. The first parameter takes line height value.
+          // $pdf->Write(0, 'Date', 'C');
+
+                  // Set Mid Point of PDF Screen
+        $mid_x = $w/2;
+
+        // Set Bottom Left Text Locations
+        if ($language == "EN") {
+          //$mid_x = 141.7; // Middle of PDF for 8.5x11 documents - not required as using math now
+          $mid_xBL = 50; // bottom left text for 8.5x11 document
+          $h_xBL = 195; // bottom left height for 8.5x11 document
+        }
+        else
+        {
+          //$mid_x = 148.3; // Middle of PDF for A4 documents - not required as using math now
+          $mid_xBL = 57; // bottom left text for A4 documents
+          $h_xBL = 185; // bottom left height for 8.5x11 document
+        }
+
+        // ADD NAME
+        $pdf->SetFont('Times','B',36);
+        $text = $name;
+        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
+
+        // ADD SESSION
+        $pdf->SetFont('Times','',24);
+        $text = $session;
+        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
+
+        // ADD LOCATION
+        $pdf->SetFont('Times','',12);
+        $text = $location;
+        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
+
+        // ADD DATE
+        $pdf->SetFont('Times','',12);
+        $text = $date;
+        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
+
+        // ADD Bottom Left
+        $pdf->SetFont('Times','',9);
+        $text = $bottomleft;
+        $pdf->Text($mid_xBL - ($pdf->GetStringWidth($text) / 2), $h_xBL, $text);
+
+
+        
+
+    // Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
+    $pdf->Output('cache/'.$files[$key],$download); 
+
+    $user_pass = '';
+    $owner_pass = $files[$key];
+    $origFile = __DIR__.'/cache/'.$files[$key];
+    $destFile = __DIR__.'/cache/'.$files[$key];
+
+    pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
+
+
+  } //// END LOOP GENERATE PDFs ////
+
+  unset($value);
+
+  //// GENERATE ZIP FILE
+
+  # create new zip opbject
+  $zip = new ZipArchive();
+
+  # create a temp file & open it
+  $tmp_file = tempnam('cache/', 'zipfile');
+  $zip->open($tmp_file, ZipArchive::CREATE);
+
+  # loop through each file
+  foreach($files as $file){
+
+      # download file
+      $download_file = file_get_contents('cache/'.$file);
+
+      #add it to the zip
+      $zip->addFromString(basename($file),$download_file);
+
+  }
+
+  # close zip
+  $zip->close();
+  $zip_download_name = "cache/KT_certificates_".formatURL($session)."_".formatURL($date)."_".formatURL($location).".zip";
+  rename($tmp_file, $zip_download_name);
+  $zip_download_name = "KT_certificates_".formatURL($session)."_".formatURL($date)."_".formatURL($location).".zip";
+
+  //// OUTPUT ZIP TO DOWNLOAD
+
+  $filepath = $_SERVER['SCRIPT_FILENAME'];
+  $filepath = rtrim($filepath,"ktc.php")."cache/";
+
+  // http headers for zip downloads
+  header("Pragma: public");
+  header("Expires: 0");
+  header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+  header("Cache-Control: public");
+  header("Content-Description: File Transfer");
+  header("Content-type: application/octet-stream");
+  header("Content-Disposition: attachment; filename=\"".$zip_download_name."\"");
+  header("Content-Transfer-Encoding: binary");
+  header("Content-Length: ".filesize($filepath.$zip_download_name));
+  ob_end_flush();
+  @readfile($filepath.$zip_download_name);
+
+
+  //// END GENERATE ZIP FILE
 
 
 } ////// END MULTIPLE //////
