@@ -52,6 +52,8 @@ $tolibrary = htmlspecialchars_decode(rawurldecode($_GET['library']));
 $clientname = htmlspecialchars_decode(rawurldecode($_GET['client']));
 $clientlogo2 = htmlspecialchars_decode(rawurldecode($_GET['existing-logo']));
 
+//echo "hi ".$newlogo."<br>";echo "hi ".$tolibrary." ".$clientname."<br>";exit;
+
 ///// CHECK IMAGE UPLOAD SUCCESSFUL /////
 if (!empty($newlogo)&&(file_exists("uploads/".$newlogo))) { 
 } else { 
@@ -251,11 +253,10 @@ function formatURL($unformatted) {
 
     $url = strtolower(trim($unformatted));
 
-    //DISABLED BY SHANE 6/4/2021 - To try and get chinese characters working
-    //replace accent characters, foreign languages
-    //$search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ'); 
-    //$replace = array('A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'IJ', 'ij', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'OE', 'oe', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'AE', 'ae', 'O', 'o'); 
-    //$url = str_replace($search, $replace, $url);
+    //replace accent characters, forien languages
+    $search = array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ'); 
+    $replace = array('A', 'A', 'A', 'A', 'A', 'A', 'AE', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'IJ', 'ij', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'OE', 'oe', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'AE', 'ae', 'O', 'o'); 
+    $url = str_replace($search, $replace, $url);
 
     //replace common characters
     $search = array('&', '£', '$'); 
@@ -305,25 +306,25 @@ function pdfEncrypt ($origFile, $user_password, $owner_password, $destFile)
 
     // add LOGO
     global $clientlogo2; // from Library
-    
-    if(!empty($clientlogo2)) {
-      $image1 = "logos/".$clientlogo2;
-      list($width, $height, $type, $attr) = getimagesize("logos/".$clientlogo2);
-      $heightmm = $height*25.4/300;
-      $pdf->Image($image1, 30, $pdf->GetY() + 175 - $heightmm, -300);
+    if(!empty($clientlogo2)){
+		$image1 = "logos/".$clientlogo2;
+		list($width, $height, $type, $attr) = getimagesize("logos/".$clientlogo2);
+		$heightmm = $height*25.4/300;
+		//echo $heightmm;exit;  
+		$pdf->Image($image1, 30, $pdf->GetY() + 175 - $heightmm, -300);
     } else {
-      global $newlogo; // uploaded new
-      if (!empty($newlogo)) {
-        $image1 = "uploads/".$newlogo;
-        list($width, $height, $type, $attr) = getimagesize("uploads/".$newlogo);
-        $heightmm = $height*25.4/300;
-         
-        $pdf->Image($image1, 30, $pdf->GetY() + 175 - $heightmm, -300);
-      }
+    global $newlogo; // uploaded new
+    if (!empty($newlogo)){
+    	$image1 = "uploads/".$newlogo;
+    	list($width, $height, $type, $attr) = getimagesize("uploads/".$newlogo);
+		$heightmm = $height*25.4/300;
+		//echo $heightmm;exit;  
+    	$pdf->Image($image1, 30, $pdf->GetY() + 175 - $heightmm, -300);
+    	}
     }
     
     }
-    
+    //echo $password;echo $origFile;exit;
     $pdf->SetProtection(array('print'),$user_password, $owner_password);
     $pdf->Output($destFile, 'F');
 
@@ -332,42 +333,39 @@ function pdfEncrypt ($origFile, $user_password, $owner_password, $destFile)
 
 ////// CLEAR OLD CACHE //////
 $folderName = "cache/";
-
 if (file_exists($folderName)) {
-  foreach (new DirectoryIterator($folderName) as $fileInfo) {
-    if ($fileInfo->isDot()) {
-      continue;
+    foreach (new DirectoryIterator($folderName) as $fileInfo) {
+        if ($fileInfo->isDot()) {
+        continue;
+        }
+        if (time() - $fileInfo->getCTime() >= 15*60) {
+            unlink($fileInfo->getRealPath());
+        }
     }
-    if (time() - $fileInfo->getCTime() >= 15*60) {
-      unlink($fileInfo->getRealPath());
-    }
-  }
 }
-
 $folderName = "uploads/";
 if (file_exists($folderName)) {
-  foreach (new DirectoryIterator($folderName) as $fileInfo) {
-    if ($fileInfo->isDot()) {
-      continue;
+    foreach (new DirectoryIterator($folderName) as $fileInfo) {
+        if ($fileInfo->isDot()) {
+        continue;
+        }
+        if (time() - $fileInfo->getCTime() >= 15*60) {
+            unlink($fileInfo->getRealPath());
+        }
     }
-    if (time() - $fileInfo->getCTime() >= 15*60) {
-      unlink($fileInfo->getRealPath());
-    }
-  }
 }
-
 $folderName = "logos/";
 if (file_exists($folderName)) {
-  foreach (new DirectoryIterator($folderName) as $fileInfo) {
-    if ($fileInfo->isDot()) {
-      continue;
+    foreach (new DirectoryIterator($folderName) as $fileInfo) {
+        if ($fileInfo->isDot()) {
+        continue;
+        }
+        // gooi oude files (>15min) weg die geen _XYZ_ in naam hebben
+        if ((time() - $fileInfo->getCTime()&&(strpos($fileInfo, '_XYZ_') == false)) >= 15*60) {
+            
+            unlink($fileInfo->getRealPath());
+        }
     }
-    
-    // gooi oude files (>15min) weg die geen _XYZ_ in naam hebben
-    if ((time() - $fileInfo->getCTime()&&(strpos($fileInfo, '_XYZ_') == false)) >= 15*60) {  
-      unlink($fileInfo->getRealPath());
-    }
-  }
 }
 ////// END CLEAR OLD CACHE //////
 
@@ -419,34 +417,50 @@ if ($wlenght>80) { echo "date must be 2-80 characters"; exit;}
 if ($wlenght<2) { echo "date must be 2-80 characters"; exit;}
 
 // make special characters work
-$name = str_replace("\\", "", $name);
-//Disabled by Shane to try and get chinese characters to work $name = iconv('UTF-8', 'windows-1252', $name);
+$names = str_replace("\\", "", $names);
+$names = iconv('UTF-8', 'windows-1252', $names);
 $session = iconv('UTF-8', 'windows-1252', $session);
 $location = iconv('UTF-8', 'windows-1252', $location);
 $date = iconv('UTF-8', 'windows-1252', $date);
 
-
-// SINGLE OR MULTIPLE PDFs?
-if (empty($names)) { 
-
-
-  ////// SINGLE //////
-
-  // CHECK INPUT $NAME
+// CHECK INPUT $NAMES
   // Check if empty
-  if (empty($name)) { echo "No name"; exit;}
+  if (empty($names)) { echo "No name"; exit;}
   // Check if only letters
-  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $name))) { echo "name = ".$name."<br>Name only letters"; exit;}
+  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $names))) { echo "names = ".$names."<br>Names only letters"; exit;}
   // Check length
-  $wlenght = strlen($name);
-  if ($wlenght>80) { echo "name must be 2-80 characters"; exit;}
+  $wlenght = strlen($names);
+  if ($wlenght>8000) { echo "names must be 2-8000 characters"; exit;}
   if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
 
-  
-  // define output filename
-  $outputfilename = formatURL($name).'_KT_'.formatURL($session).'.pdf';
+// define output filename
+$outputfilenames = $names;
+$outputfilenames = preg_replace('/\s*,\s*/', ',', $outputfilenames); // remove spaces around commas
+$outputfilenames = preg_replace('/,+/', ',', $outputfilenames); // remove multiple commas
+$outputfilenamesArray = explode(',', $outputfilenames);
 
-//// CREATE A SINGLE PDF
+
+// FROM OLD SINGLE FILENAMES define output filename
+//$outputfilename = formatURL($name).'_KT_'.formatURL($session).'.pdf';
+
+//IF WE ARE EVEN DOWNLOADING????????????
+foreach ($outputfilenamesArray as &$value) {
+  // BUILD ARRAY OF FILENAMES FOR FUTURE ZIP-file
+  $pdf_filename = formatURL($value).'_KT_'.formatURL($session).'.pdf';
+  $files[] = $pdf_filename;
+}
+unset($value);  
+
+//Clean Up Names Array before cycling
+$names = preg_replace('/\s*,\s*/', ',', $names); // remove spaces around commas
+$names = preg_replace('/,+/', ',', $names); // remove multiple commas
+$nameArray = explode(',', $names);
+
+foreach ($nameArray as $key => $value) {
+
+  $name = $value;
+
+  //// CREATE A SINGLE PDF
 
   // You can create an object of the FPDI class. 
   // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
@@ -562,25 +576,35 @@ if (empty($names)) {
 
   // Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
   //$pdf->Output($outputfilename,$download);
-  $pdf->Output('cache/'.$outputfilename,"F"); 
+  //$pdf->Output('cache/'.$outputfilename,"F"); //for single - commented out and replaced
+  $pdf->Output('cache/'.$files[$key],$download); //for multiple
 
+  //commented out from single
+  //$user_pass = '';
+  //$owner_pass = $outputfilename;
+  //$origFile = __DIR__.'/cache/'.$outputfilename;
+  //$destFile = __DIR__.'/cache/'.$outputfilename;
+  
+  //new for multiple
   $user_pass = '';
-  $owner_pass = $outputfilename;
-  $origFile = __DIR__.'/cache/'.$outputfilename;
-  $destFile = __DIR__.'/cache/'.$outputfilename;
+  $owner_pass = $files[$key];
+  $origFile = __DIR__.'/cache/'.$files[$key];
+  $destFile = __DIR__.'/cache/'.$files[$key];
 
   pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
 
-  ///END CREATE A SINGLE PDF 
+} /// END LOOP GENERATE PDFs /// ///END CREATE A SINGLE PDF 
+unset ($value);
 
+//// OUTPUT PDF TO DISPLAY/DOWNLOAD
 
-  //// OUTPUT PDF TO DISPLAY/DOWNLOAD
+echo $download;
+exit;
 
-  $filepath = $_SERVER['SCRIPT_FILENAME'];
-  $filepath = rtrim($filepath,"ktc.php")."cache/";
+// FORCE SET $DOWNLOAD
+$download = "F";
 
-  if($download=="D"){
-
+if($download=="D") {
   // http headers for pdf downloads
   header("Pragma: public");
   header("Expires: 0");
@@ -594,8 +618,7 @@ if (empty($names)) {
   ob_end_flush();
   @readfile($filepath.$outputfilename);
 
-  } else if($download=="I"){
-
+} else if($download=="I") {
   $file = $filepath.$outputfilename;
   $filename = $outputfilename;
   header('Content-type: application/pdf');
@@ -603,164 +626,7 @@ if (empty($names)) {
   header('Content-Transfer-Encoding: binary');
   header('Accept-Ranges: bytes');
   @readfile($file);
-
-  }
-} ////// END SINGLE //////
-else
-{
-
-
-  ////// MULTIPLE //////
-
-
-  // SET $DOWNLOAD
-  $download = "F";
-
-  // CHECK INPUT $NAMES
-  // Check if empty
-  if (empty($names)) { echo "No name"; exit;}
-  // Check if only letters
-  if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", ".", ",", '-', '(', ')'), '', $names))) { echo "names = ".$names."<br>Names only letters"; exit;}
-  // Check length
-  $wlenght = strlen($names);
-  if ($wlenght>8000) { echo "names must be 2-8000 characters"; exit;}
-  if ($wlenght<2) { echo "name must be 2-80 characters"; exit;}
-
-
-  // define output filename
-  $outputfilenames = $names;
-  $outputfilenames = preg_replace('/\s*,\s*/', ',', $outputfilenames); // remove spaces around commas
-  $outputfilenames = preg_replace('/,+/', ',', $outputfilenames); // remove multiple commas
-  $outputfilenamesArray = explode(',', $outputfilenames);
-
-  foreach ($outputfilenamesArray as &$value) {
-
-  // BUILD ARRAY OF FILENAMES FOR FUTURE ZIP-file
-  $pdf_filename = formatURL($value).'_KT_'.formatURL($session).'.pdf';
-  $files[] = $pdf_filename;
-
-  }
-  unset($value);
-
-  // make special characters work
-  $names = str_replace("\\", "", $names);
-  $names = iconv('UTF-8', 'windows-1252', $names);
-  
-  //// LOOP TO GENERATE PDFs ////
-
-  $names = preg_replace('/\s*,\s*/', ',', $names); // remove spaces around commas
-  $names = preg_replace('/,+/', ',', $names); // remove multiple commas
-  $nameArray = explode(',', $names);
-
-  foreach ($nameArray as $key => $value) {
-
-    $name = $value;
-
-            //// CREATE A SINGLE PDF
-
-          //if (strpos($certtype, "service") !== false) { 
-          //  echo "service found!";
-          //  exit;
-          //} else {
-          //  echo "no service found";
-          //  exit;
-          //}
-
-
-          // You can create an object of the FPDI class. 
-          // The FDPI class, by default detects end extends the TCPDF or FPDF class (whichever is available), 
-          // so you need not create a new TCPDF or FPDF object.
-          // L = landscape, P = Portrait
-          //test commented out shane $pdf = new FPDI('L','mm','A4');
-          $pdf = new FPDI();
-          // Specify the source PDF document by calling setSourceFile function.
-          $pdf->setSourceFile($certtype."_".$language.".pdf");
-
-          // Specify which page of the document is to be imported. 
-          // I’m importing 1st page and setting the second parameter – boxtype to ‘/Mediabox’.
-          // http://www.prepressure.com/pdf/basics/page-boxes
-          $tplIdx = $pdf->importPage(1, '/MediaBox');
-
-          //new line from shane for size setting
-          $size = $pdf->getTemplateSize($tplIdx);
-          $w = $size[w];
-          $h = $size[h];
-          
-          $pdf->addPage();
-
-          // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
-          // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
-          //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
-          $pdf->useTemplate($tplIdx, null, null, null, null, true);
-
-          // Now the document and the page to be used as template is successfully loaded. 
-          // Text or image can be added anywhere on the loaded page by specifying XY co-ordinates of the position 
-          $pdf->SetFont('Times','',12);
-          $pdf->SetTextColor(0, 0, 0);
-          $pdf->SetXY(148, 145);
-
-          // To write text, call the write() function. The first parameter takes line height value.
-          // $pdf->Write(0, 'Date', 'C');
-
-                  // Set Mid Point of PDF Screen
-        $mid_x = $w/2;
-
-        // Set Bottom Left Text Locations
-        if ($language == "EN") {
-          //$mid_x = 141.7; // Middle of PDF for 8.5x11 documents - not required as using math now
-          $mid_xBL = 50; // bottom left text for 8.5x11 document
-          $h_xBL = 195; // bottom left height for 8.5x11 document
-        }
-        else
-        {
-          //$mid_x = 148.3; // Middle of PDF for A4 documents - not required as using math now
-          $mid_xBL = 57; // bottom left text for A4 documents
-          $h_xBL = 185; // bottom left height for 8.5x11 document
-        }
-
-        // ADD NAME
-        $pdf->SetFont('Times','B',36);
-        $text = $name;
-        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 64, $text);
-
-        // ADD SESSION
-        $pdf->SetFont('Times','',24);
-        $text = $session;
-        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 135, $text);
-
-        // ADD LOCATION
-        $pdf->SetFont('Times','',12);
-        $text = $location;
-        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 147, $text);
-
-        // ADD DATE
-        $pdf->SetFont('Times','',12);
-        $text = $date;
-        $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
-
-        // ADD Bottom Left
-        $pdf->SetFont('Times','',9);
-        $text = $bottomleft;
-        $pdf->Text($mid_xBL - ($pdf->GetStringWidth($text) / 2), $h_xBL, $text);
-
-
-        
-
-    // Call the Output() function to output the PDF document on the clients browser. I=in browser D=download
-    $pdf->Output('cache/'.$files[$key],$download); 
-
-    $user_pass = '';
-    $owner_pass = $files[$key];
-    $origFile = __DIR__.'/cache/'.$files[$key];
-    $destFile = __DIR__.'/cache/'.$files[$key];
-
-    pdfEncrypt($origFile, $user_pass, $owner_pass, $destFile );
-
-
-  } //// END LOOP GENERATE PDFs ////
-
-  unset($value);
-
+} else if ($download=="F") {
   //// GENERATE ZIP FILE
 
   # create new zip opbject
@@ -771,14 +637,12 @@ else
   $zip->open($tmp_file, ZipArchive::CREATE);
 
   # loop through each file
-  foreach($files as $file){
+  foreach($files as $file) {
+    # download file
+    $download_file = file_get_contents('cache/'.$file);
 
-      # download file
-      $download_file = file_get_contents('cache/'.$file);
-
-      #add it to the zip
-      $zip->addFromString(basename($file),$download_file);
-
+    #add it to the zip
+    $zip->addFromString(basename($file),$download_file);
   }
 
   # close zip
@@ -807,10 +671,7 @@ else
 
 
   //// END GENERATE ZIP FILE
-
-
-} ////// END MULTIPLE //////
-
+} //Close Display Options
 
 } else  // if not logged in
 	{
