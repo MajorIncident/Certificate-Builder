@@ -393,7 +393,7 @@ if ($wlenght<2) { echo "session must be 2-80 characters"; exit;}
 // CHECK INPUT $LOCATION
 // Check if empty
 if (empty($location)) { 
-  //Do nothing and do not throw error as not required - old code: // echo "No location"; exit;}
+  //Shane Edit: Do nothing and do not throw error as not required - old code: // echo "No location"; exit;}
 }else  {
     // Check if only letters
   if (!preg_match("/^(?:[\s,.'-]*[a-zA-Z\pL][\s,.'-]*)+$/u", str_replace(array(' ', "\'", "/",".", ",", '-', '&', '(', ')'), '', preg_replace('/[0-9]+/', '', $location)))) { echo "location = ".$location."<br>Location format incorrect"; exit;}
@@ -470,6 +470,7 @@ if (empty($names)) {
   // Detect Portrait or Landscape?
   if ($h > $w) { //PDF is Portrait (Service Certificates)
     
+    //Display Message and stop as Service Certificate Code Not Available Yet
     echo "Service Certificates are still being worked on at this time at this time - shane 06/03/2021";
     exit;
 
@@ -503,7 +504,7 @@ if (empty($names)) {
     $pdf->addPage();
 
     // old code from gijs $pdf->useTemplate($tplIdx, 0, 0, 0, 0, true); 
-    // new shane update - 310 is a magic number to result in non cropped pdf as per https://stackoverflow.com/questions/6674753/problem-with-size-of-the-imported-pdf-template-with-fpditcpdf
+    // Shane Edit: This method does not stretch during import and allows multiple formats to be entered and created correctly
     //$pdf ->useTemplate($tplIdx, null, null, $size['w'], 0, FALSE);
     $pdf->useTemplate($tplIdx, null, null, null, null, true);
 
@@ -516,10 +517,10 @@ if (empty($names)) {
     // To write text, call the write() function. The first parameter takes line height value.
     // $pdf->Write(0, 'Date', 'C');
 
-    // Set Mid Point of PDF Screen
+    // Shane Edit: Set Mid Point of PDF Screen
     $mid_x = $w/2;
 
-    // Set Bottom Left Text Locations
+    // Shane Edit: Set Bottom Left Text Locations
     if ($language == "EN") {
       //$mid_x = 141.7; // Middle of PDF for 8.5x11 documents - not required as using math now
       $mid_xBL = 50; // bottom left text for 8.5x11 document
@@ -552,7 +553,7 @@ if (empty($names)) {
     $text = $date;
     $pdf->Text($mid_x - ($pdf->GetStringWidth($text) / 2), 154, $text);
 
-    // ADD Bottom Left
+    // Shane Edit: ADD Bottom Left Text
     $pdf->SetFont('Times','',9);
     $text = $bottomleft;
     $pdf->Text($mid_xBL - ($pdf->GetStringWidth($text) / 2), $h_xBL, $text);
