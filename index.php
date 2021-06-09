@@ -94,7 +94,7 @@ session_start();
 	<div class="DZ-form">
 	<h1><b>KT CERTIFICATE BUILDER</b></h1>
 	<h4>by: Gijs Verrest and Shane Chagpar</h4></div>
-	<h4>Version: 6/3/2021</h4></div>
+	<h4>Version: 6/9/2021</h4></div>
 	<h4>Known Issues: <br />
 	Service Certificates are not ready. <br />
 	missing certificates for many languages (except Completion Dutch) this will display a website error.<br /> 
