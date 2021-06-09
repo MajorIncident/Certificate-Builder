@@ -98,9 +98,8 @@ session_start();
 	<h4>Known Issues: <br />
 	Service Certificates are not ready. <br />
 	missing certificates for many languages (except Completion Dutch) this will display a website error.<br /> 
-	Centering on certificates is not calibrated<br />
 	Chinese Character Support<br />
-	Bottom Left text is centered around a point instead of hugging the left</h4></div>
+	Bottom Left text is centered instead of left aligned</h4></div>
 	
 	<div class="DZ-form">
 		<h2>Optional: Client Logo</h2>
