@@ -94,12 +94,12 @@ session_start();
 	<div class="DZ-form">
 	<h1><b>KT CERTIFICATE BUILDER</b></h1>
 	<h4>by: Gijs Verrest and Shane Chagpar</h4></div>
-	<h4>Version: 6/9/2021</h4></div>
+	<h4>Version: 6/14/2021</h4></div>
 	<h4>Known Issues: <br />
-	Service Certificates are not ready. <br />
-	missing certificates for many languages (except Completion Dutch) this will display a website error.<br /> 
-	Chinese Character Support<br />
-	Bottom Left text is centered instead of left aligned</h4></div>
+	Add Company trained line<br /> 
+	Add Chinese Character Support?<br />
+	Fix Bottom Left text is centered instead of left aligned<br />
+	</h4></div>
 	
 	<div class="DZ-form">
 		<h2>Optional: Client Logo</h2>
@@ -182,6 +182,11 @@ session_start();
 				<input class="message" type="text" name="bottomleft" id="bottomleft">
 		    </div>
 
+			<h4>Currently Installed Certificates (all others will generate website error):<br/>
+			 Completion (English,German,Dutch)<br/>
+			 Process Coach (English)<br/>
+			 Process Facilitation (English)<br/>
+			 Program Leader (English,French)</h4><br/>
 			<h4>Certificate Language</h4>
 		    
 		    <ul class="cd-form-list">
@@ -229,6 +234,7 @@ session_start();
 						<label for="radio-4">Process Facilitator</label>
 					</li>
 
+					<!--REMOVED SERVICE CERTIFICATE OPTIONS
 					<li>
 						<input type="radio" name="certtype" id="radio-6" value="serviceA">
 						<label for="radio-5">Service: 5 Years</label>
@@ -253,6 +259,7 @@ session_start();
 						<input type="radio" name="certtype" id="radio-9" value="serviceE">
 						<label for="radio-9">Service: 25 Years</label>
 					</li>
+					END REMOVED LIST OF SERVICE CERTIFICATES-->
 					
 
 				</ul>
