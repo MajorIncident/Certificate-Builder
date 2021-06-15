@@ -95,10 +95,11 @@ session_start();
 	<h1><b>KT CERTIFICATE BUILDER</b></h1>
 	<h4>by: Gijs Verrest and Shane Chagpar</h4></div>
 	<h4>Version: 6/14/2021</h4></div>
-	<h4>Known Issues: <br />
-	Add Company trained line<br /> 
-	Add Chinese Character Support?<br />
-	Fix Bottom Left text is centered instead of left aligned<br />
+	<h4>Development ToDO List: <br />
+	1)	Feature: Chinese Character support – waiting on a decision<br />
+	2)	Bottom Left text – needs to change from center to left justify<br />
+	3)	Bottom Right Text – Add a field above the slogan to put the instructor name optionally<br />
+	4)	Bottom Right Text – add a field above the slogan to put the company name being trained optionally<br />
 	</h4></div>
 	
 	<div class="DZ-form">
