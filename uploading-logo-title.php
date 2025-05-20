@@ -28,7 +28,7 @@ session_start();
 	# Check Login Data
 	#
 	if($_SESSION['user'] == "kt"
-	&& $_SESSION['pass'] == hash('sha256', '!Tregoe2021'))
+	&& $_SESSION['pass'] == hash('sha256', '!Tregoe2017'))
 	{
 	
 

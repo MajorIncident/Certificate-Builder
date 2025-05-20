@@ -1,0 +1,320 @@
+<?php
+// Start session
+session_start();
+
+// Check for session timeout, else initialize time
+if (isset($_SESSION['timeout'])) {
+    // Check Session Time for expiry
+    // Time is in seconds. 10 * 60 = 600s = 10 minutes
+    if ($_SESSION['timeout'] + 30 * 60 < time()) {
+        session_destroy();
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
+} else {
+    // Initialize session variables
+    $_SESSION['user'] = "";
+    $_SESSION['pass'] = "";
+    $_SESSION['timeout'] = time();
+}
+
+// Store POST data in session variables
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['user']) && isset($_POST['pass'])) {
+        $_SESSION['user'] = $_POST['user'];
+        $_SESSION['pass'] = hash('sha256', $_POST['pass']);
+        $_SESSION['timeout'] = time();
+    }
+}
+
+// Check Login Data
+if (!(isset($_SESSION['user']) && $_SESSION['user'] === "kt" &&
+    isset($_SESSION['pass']) && $_SESSION['pass'] === hash('sha256', '!Tregoe2021'))) {
+    // If not logged in, show login form
+    ?>
+    <!doctype html>
+    <html lang="en" class="no-js">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+        <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+        <script src="js/modernizr.js"></script> <!-- Modernizr -->
+        <title>Please login</title>
+    </head>
+    <body>
+    <form class="cd-form floating-labels" method="POST" action="">
+        <fieldset>
+            <legend>Please login</legend>
+            <div class="icon">
+                <label class="cd-label" for="user">User</label>
+                <input class="user" type="text" name="user" id="user" required>
+            </div>
+            <div class="icon">
+                <label class="cd-label" for="pass">Password</label>
+                <input class="password" type="password" name="pass" id="pass" required>
+            </div>
+            <input type="submit" name="submit" value="Login">
+        </fieldset>
+    </form>
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/main.js"></script> <!-- Resource jQuery -->
+    </body>
+    </html>
+    <?php
+    exit;
+}
+?>
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
+    <link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
+    <link rel="stylesheet" href="css/dropzone.css"> <!-- Dropzone -->
+    <script src="js/modernizr.js"></script> <!-- Modernizr -->
+    <script src="js/dropzone.js"></script> <!-- Dropzone -->
+    <title>KT Certificate Builder</title>
+</head>
+<body>
+
+<div class="DZ-form">
+    <h1><b>KT CERTIFICATE BUILDER</b></h1>
+    <h4>by: Gijs Verrest and Shane Chagpar</h4>
+    <h4>Version: 2024/05/14</h4>
+    <h4>Development To Do List:<br />
+        1) Feature: Chinese Character support – waiting on a decision<br />
+        2) Bottom Left text – needs to change from center to left justify<br />
+        3) Bottom Right Text – Add a field above the slogan to put the instructor name optionally<br />
+        4) Bottom Right Text – add a field above the slogan to put the company name being trained optionally<br /><br />
+        Changelog:<br />
+        <h4>Version: 2024/05/14</h4>
+        a) Security enhancements on all uploaded files to prevent directory attacks
+        b) updated all code to be compatible with PHP 8.0
+        <h4>Version: 2022/11/17</h4>
+        a) Updated Certificates for new KT HQ Address<br />
+        b) removed KT website on right side of certificates<br />
+        c) added french language completion certificate<br />
+    </h4>
+</div>
+
+<div class="DZ-form">
+    <h2>Optional: Client Logo</h2>
+    <h4><br>Upload logo (JPG, GIF or PNG in high resolution)</h4>
+    <form action="upload.php" class="dropzone" id="myDropzone">
+    </form>
+</div>
+
+<form class="cd-form floating-labels" action='ktc.php' id="certform" method="POST">
+    <fieldset>
+        <div id="addLogo2" style="display: none;">
+            <ul class="cd-form-list">
+                <li>
+                    <input type="checkbox" name="library" value="yes" id="library" onclick="ToggleShow('addLogo3');ToggleReq('client')">
+                    <label for="library">Store in Library?</label>
+                </li>
+            </ul>
+        </div>
+        <div class="icon" id="addLogo3" style="display: none;">
+            <label class="cd-label" for="client">Client name</label>
+            <input class="message" type="text" name="client" id="client">
+        </div>
+        <div id="addLogo4" class="icon">
+            <h4>Or select client logo from Library:</h4>
+            <select class="arrow" name="existing-logo" id="existing-logo">
+                <option value=''></option>
+                <?php
+                foreach (glob(dirname(__FILE__) . '/logos/*') as $filename) {
+                    $filename = basename($filename);
+                    $filename2 = explode("_XYZ_", $filename);
+                    echo "<option value='" . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($filename2[0], ENT_QUOTES, 'UTF-8') . "</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div id="showLogo" style="display: none;"><img id="ClientLogo" src="" style="max-width: 150px; height: auto;" /></div>
+    </fieldset>
+    <fieldset>
+        <legend>Certificate Details</legend>
+        <div class="icon">
+            <h4>Select a class name</h4>
+            <select class="arrow" name="sessiondd" id="sessiondd">
+                <option value=''></option>
+                <option value="Problem Solving and Decision Making" selected>Problem Solving and Decision Making</option>
+                <option value="Analytic Troubleshooting">Analytic Troubleshooting</option>
+                <option value="Troubleshooting Foundations">Troubleshooting Foundations</option>
+                <option value="Problem Management">Problem Management</option>
+                <option value="Major Incident Management">Major Incident Management</option>
+                <option value="Project Management">Project Management</option>
+                <option value="Frontline">Frontline</option>
+                <option value="Incident Mapping">Incident Mapping</option>
+                <option value="Proactive Problem Management">Proactive Problem Management</option>
+            </select>
+        </div>
+        <h4>Optional: Enter a Custom Class Name (any text here will be added to any class name you may select above)</h4>
+        <div class="icon">
+            <label class="cd-label" for="session">Custom Session/Class Name</label>
+            <input class="message" type="text" name="session" id="session">
+        </div>
+        <div class="icon">
+            <label class="cd-label" for="date">Date</label>
+            <input class="message" type="date" name="date" id="date" value="<?php echo date('Y-m-d'); ?>" required>
+        </div>
+        <div class="icon">
+            <label class="cd-label" for="location">Location</label>
+            <input class="message" type="text" name="location" id="location">
+        </div>
+        <div class="icon">
+            <label class="cd-label" for="bottomleft">Bottom Left Text (For Trainer Name, Education Credits, or other text you wish to add)</label>
+            <input class="message" type="text" name="bottomleft" id="bottomleft">
+        </div>
+        <h4>Currently Installed Certificates (all others will generate website error):<br/>
+            Completion (English,German,Dutch)<br/>
+            Process Coach (English)<br/>
+            Process Facilitation (English)<br/>
+            Program Leader (English,French)</h4><br/>
+        <h4>Certificate Language</h4>
+        <ul class="cd-form-list">
+            <li>
+                <input type="radio" name="language" id="radio-1" value="EN" checked>
+                <label for="radio-1">English</label>
+            </li>
+            <li>
+                <input type="radio" name="language" id="radio-2" value="DE">
+                <label for="radio-2">German</label>
+            </li>
+            <li>
+                <input type="radio" name="language" id="radio-3" value="NL">
+                <label for="radio-3">Dutch</label>
+            </li>
+            <li>
+                <input type="radio" name="language" id="radio-4" value="FR">
+                <label for="radio-4">French</label>
+            </li>
+        </ul>
+        <h4>Certificate Type</h4>
+        <ul class="cd-form-list">
+            <li>
+                <input type="radio" name="certtype" id="certtype-1" value="completion" checked>
+                <label for="certtype-1">Completion</label>
+            </li>
+            <li>
+                <input type="radio" name="certtype" id="certtype-2" value="programleader">
+                <label for="certtype-2">Program Leader</label>
+            </li>
+            <li>
+                <input type="radio" name="certtype" id="certtype-3" value="processcoach">
+                <label for="certtype-3">Process Coach</label>
+            </li>
+            <li>
+                <input type="radio" name="certtype" id="certtype-4" value="processfacilitator">
+                <label for="certtype-4">Process Facilitator</label>
+            </li>
+        </ul>
+        <h4>Destination</h4>
+        <ul class="cd-form-list">
+            <li>
+                <input type="radio" name="download" id="download-2" value="D" checked>
+                <label for="download-2">Download PDF</label>
+            </li>
+            <li>
+                <input type="radio" name="download" id="download-1" value="I">
+                <label for="download-1">Show PDF in browser</label>
+            </li>
+        </ul>
+        <input type="hidden" name="logo" id="logo" value="">
+    </fieldset>
+    <legend>Names</legend>
+    <div><h2><b>Option 1: SINGLE CERTIFICATE</b></h2>
+        <div class="icon">
+            <label class="cd-label" for="name">Full Name</label>
+            <input class="user" type="text" name="name" id="name">
+        </div>
+    </div>
+    <div><h2><b>Option 2: .ZIP of MULTIPLE CERTIFICATES</b></h2>
+        <h4>Use commas to separate names.</h4>
+        <div class="icon">
+            <label class="cd-label" for="names">Full Name1, Full Name2, Full Name3</label>
+            <textarea class="message" name="names" id="names"></textarea>
+        </div>
+    </div>
+    <div><input type="submit" value="Create Certificate(s)"></div>
+</form>
+
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/main.js"></script> <!-- Resource jQuery -->
+<script>
+function ToggleShow(a) {
+    var x = document.getElementById(a);
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+
+function ToggleReq(b) {
+    var y = document.getElementById(b);
+    if (y.required === true) {
+        y.removeAttribute("required");
+    } else {
+        y.required = true;
+    }
+}
+
+var activities = document.getElementById("existing-logo");
+
+activities.addEventListener("click", function() {
+    var e = document.getElementById("existing-logo");
+    if (e.value.length > 0){
+        var imagesrc = "logos/" + e.value;
+        document.getElementById('showLogo').style.display = 'block';
+        document.getElementById('ClientLogo').src = imagesrc;
+    } else {
+        document.getElementById('showLogo').style.display = 'none';
+    }
+});
+
+activities.addEventListener("change", function() {
+    var e = document.getElementById("existing-logo");
+    if (e.value.length > 0){
+        var imagesrc = "logos/" + e.value;
+        document.getElementById('showLogo').style.display = 'block';
+        document.getElementById('ClientLogo').src = imagesrc;
+    } else {
+        document.getElementById('showLogo').style.display = 'none';
+    }
+});
+</script>
+
+<script>
+Dropzone.options.myDropzone = {
+    addRemoveLinks: true,
+    acceptedFiles: "image/jpeg,image/png,image/gif",
+    maxFiles: 1,
+    init: function() {
+        this.on('addedfile', function(file){
+            document.getElementById('logo').value = file.name;
+            document.getElementById('addLogo2').style.display = 'block';
+            document.getElementById('addLogo4').style.display = 'none';
+            document.getElementById('showLogo').style.display = 'none';
+            document.getElementById('existing-logo').value = "";
+        });
+        this.on('reset', function(file){
+            document.getElementById('addLogo2').style.display = 'none';
+            document.getElementById('addLogo3').style.display = 'none';
+            document.getElementById('addLogo4').style.display = 'block';
+            document.getElementById("library").checked = false;
+            document.getElementById("client").removeAttribute("required");
+        });
+    }
+};
+</script>
+
+<p></p>
+<p style="color:#ccc;font-size: 70%;">Copyright (c) 2013-2018 Gijs Verrest - forked and updated May 2021 by Shane Chagpar - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.</p>
+</body>
+</html>

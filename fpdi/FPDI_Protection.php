@@ -141,7 +141,7 @@ class FPDI_Protection extends FPDI
             $j = 0;
             for ($i=0; $i<256; $i++){
                 $t = $rc4[$i];
-                $j = ($j + $t + ord($k{$i})) % 256;
+                $j = ($j + $t + ord($k[$i])) % 256;
                 $rc4[$i] = $rc4[$j];
                 $rc4[$j] = $t;
             }
@@ -162,7 +162,7 @@ class FPDI_Protection extends FPDI
             $rc4[$a] = $rc4[$b];
             $rc4[$b] = $t;
             $k = $rc4[($rc4[$a]+$rc4[$b])%256];
-            $out.=chr(ord($text{$i}) ^ $k);
+            $out.=chr(ord($text[$i]) ^ $k);
         }
 
         return $out;
@@ -229,92 +229,18 @@ class FPDI_Protection extends FPDI
                     $value[2][1] = $this->_RC4($this->_objectkey($this->_currentObjId), $value[2][1]);
                 }
                 break;
-
-            case pdf_parser::TYPE_HEX :
-
-                if ($this->encrypted) {
-                    $value[1] = $this->hex2str($value[1]);
-                    $value[1] = $this->_RC4($this->_objectkey($this->_currentObjId), $value[1]);
-
-                    // remake hex string of encrypted string
-                    $value[1] = $this->str2hex($value[1]);
-                }
-                break;
         }
 
         parent::_writeValue($value);
     }
 
-    function hex2str($hex)
-    {
-        return pack('H*', str_replace(array("\r","\n",' '),'', $hex));
-    }
-
-    function str2hex($str)
-    {
-        return current(unpack('H*',$str));
-    }
-
     /**
-     * Deescape special characters
+     * Unescape special characters
      */
     function _unescape($s)
     {
-        $out = '';
-        for ($count = 0, $n = strlen($s); $count < $n; $count++) {
-            if ($s[$count] != '\\' || $count == $n-1) {
-                $out .= $s[$count];
-            } else {
-                switch ($s[++$count]) {
-                    case ')':
-                    case '(':
-                    case '\\':
-                        $out .= $s[$count];
-                        break;
-                    case 'f':
-                        $out .= chr(0x0C);
-                        break;
-                    case 'b':
-                        $out .= chr(0x08);
-                        break;
-                    case 't':
-                        $out .= chr(0x09);
-                        break;
-                    case 'r':
-                        $out .= chr(0x0D);
-                        break;
-                    case 'n':
-                        $out .= chr(0x0A);
-                        break;
-                    case "\r":
-                        if ($count != $n-1 && $s[$count+1] == "\n")
-                            $count++;
-                        break;
-                    case "\n":
-                        break;
-                    default:
-                        // Octal-Values
-                        if (ord($s[$count]) >= ord('0') &&
-                            ord($s[$count]) <= ord('9')) {
-                            $oct = ''. $s[$count];
-
-                            if (ord($s[$count+1]) >= ord('0') &&
-                                ord($s[$count+1]) <= ord('9')) {
-                                $oct .= $s[++$count];
-
-                                if (ord($s[$count+1]) >= ord('0') &&
-                                    ord($s[$count+1]) <= ord('9')) {
-                                    $oct .= $s[++$count];
-                                }
-                            }
-
-                            $out .= chr(octdec($oct));
-                        } else {
-                            $out .= $s[$count];
-                        }
-                }
-            }
-        }
-        return $out;
+        return str_replace(
+            array('\\\\','\\)','\\(','\\r'),
+            array('\\',')','(','\r'),$s);
     }
 }

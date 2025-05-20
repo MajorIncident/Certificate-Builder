@@ -94,12 +94,16 @@ session_start();
 	<div class="DZ-form">
 	<h1><b>KT CERTIFICATE BUILDER</b></h1>
 	<h4>by: Gijs Verrest and Shane Chagpar</h4></div>
-	<h4>Version: 6/14/2021</h4></div>
-	<h4>Development ToDO List: <br />
+	<h4>Version: 2022/11/17</h4></div>
+	<h4>Development To Do List: <br />
 	1)	Feature: Chinese Character support – waiting on a decision<br />
 	2)	Bottom Left text – needs to change from center to left justify<br />
 	3)	Bottom Right Text – Add a field above the slogan to put the instructor name optionally<br />
-	4)	Bottom Right Text – add a field above the slogan to put the company name being trained optionally<br />
+	4)	Bottom Right Text – add a field above the slogan to put the company name being trained optionally<br /><br />
+	Changelog: <br />
+	a) Updated Certificates for new KT HQ Address<br />
+	b) removed KT website on right side of certificates<br />
+	c) added french language completion certificate<br />
 	</h4></div>
 	
 	<div class="DZ-form">
